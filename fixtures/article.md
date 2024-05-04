@@ -42,7 +42,7 @@ aaaaaaaa**bold**_emphasis_~~delete~~`inline code`
 
 This is [link to GitHub.com](https://github.com/).
 
-This is ![image](https://github.githubassets.com/images/modules/logos_page/Octocat.png).
+This is ![image](avatars.githubusercontent.com/u/583231?v=4).
 
 > quote
 > quote
