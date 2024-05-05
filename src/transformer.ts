@@ -25,6 +25,9 @@ import type * as mdast from "./models/mdast";
 import { parseLatex } from "./latex";
 import { invariant, unreachable } from "./utils";
 
+export type headingLevel = (typeof HeadingLevel)[keyof typeof HeadingLevel]
+export type alignmentType = (typeof AlignmentType)[keyof typeof AlignmentType]
+
 const ORDERED_LIST_REF = "ordered";
 const INDENT = 0.5;
 const DEFAULT_NUMBERINGS: ILevelsOptions[] = [
@@ -128,6 +131,7 @@ export interface DocxOptions
     | "description"
     | "lastModifiedBy"
     | "revision"
+    | "externalStyles"
     | "styles"
     | "background"
   > {
@@ -165,6 +169,7 @@ export const mdastToDocx = async (
     description,
     lastModifiedBy,
     revision,
+    externalStyles,
     styles,
     background,
   }: DocxOptions,
@@ -183,6 +188,7 @@ export const mdastToDocx = async (
     description,
     lastModifiedBy,
     revision,
+    externalStyles,
     styles,
     background,
     footnotes,
@@ -354,7 +360,7 @@ const buildParagraph = ({ children }: mdast.Paragraph, ctx: Context) => {
 };
 
 const buildHeading = ({ children, depth }: mdast.Heading, ctx: Context) => {
-  let heading: HeadingLevel;
+  let heading: headingLevel;
   switch (depth) {
     case 1:
       heading = HeadingLevel.TITLE;
@@ -421,7 +427,7 @@ const buildListItem = (
 };
 
 const buildTable = ({ children, align }: mdast.Table, ctx: Context) => {
-  const cellAligns: AlignmentType[] | undefined = align?.map((a) => {
+  const cellAligns: alignmentType[] | undefined = align?.map((a) => {
     switch (a) {
       case "left":
         return AlignmentType.LEFT;
@@ -444,7 +450,7 @@ const buildTable = ({ children, align }: mdast.Table, ctx: Context) => {
 const buildTableRow = (
   { children }: mdast.TableRow,
   ctx: Context,
-  cellAligns: AlignmentType[] | undefined
+  cellAligns: alignmentType[] | undefined
 ) => {
   return new TableRow({
     children: children.map((c, i) => {
@@ -456,7 +462,7 @@ const buildTableRow = (
 const buildTableCell = (
   { children }: mdast.TableCell,
   ctx: Context,
-  align: AlignmentType | undefined
+  align: alignmentType | undefined
 ) => {
   const { nodes } = convertNodes(children, ctx);
   return new TableCell({
